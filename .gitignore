@@ -211,8 +211,8 @@ UpgradeLog*.XML
 UpgradeLog*.htm
 
 # SQL Server files
-*.mdf
-*.ldf
+#*.mdf
+#*.ldf
 
 # Business Intelligence projects
 *.rdl.data
@@ -259,3 +259,5 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+/CoffeeCircles/Data/CoffeeCirclesDb.mdf
+/CoffeeCircles/Data/CoffeeCirclesDb_log.ldf

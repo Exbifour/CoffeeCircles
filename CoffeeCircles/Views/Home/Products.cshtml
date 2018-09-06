@@ -1,0 +1,65 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+    ViewData["Title"] = "Products";
+}
+
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+
+        <h2>Products</h2>
+
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <a asp-controller="Home" asp-action="EditProduct" class="btn btn-default">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add new product
+            </a>
+        }
+        <hr />
+
+        @foreach (Product p in ViewBag.Products)
+        {
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="media">
+                        <div class="media-left media-middle">
+                            <div style="width:128px">
+                                <a href="">
+                                    <img class="media-object" style="height:128px; margin-left:auto; margin-right:auto" src="@Url.Content(p.PhotoRef)" alt="@p.Name">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="media-body">
+                            <h3 class="media-heading">
+                                @p.Name
+                            </h3>
+                            <h4>
+                                <span class="label label-default">@p.ProductType.Name</span>
+                                <span class="label label-info">@Decimal.Round(p.Price, 2) UAH</span>
+                            </h4>
+                            <h4 class="media-body">
+                                @*@{
+                                    string shortDesc = p.Description;
+                                    int cropEnd = shortDesc.LastIndexOf(',', 98)
+                                    shortDesc.Length > 100)
+                                    {
+                                        shortDesc = shortDesc.Substring(0, 100);
+                                        if( != -1
+                                            || shortDesc.LastIndexOf('.', 98) != -1)
+                                        {
+
+                                        }
+                                    }
+                                    var text =  ?  + "..." : p.Description;
+                                }*@
+                                @p.Description
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

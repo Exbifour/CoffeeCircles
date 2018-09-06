@@ -12,6 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using CoffeeCircles.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using CoffeeCircles.Models;
+using System.Globalization;
 
 namespace CoffeeCircles
 {
@@ -36,8 +38,10 @@ namespace CoffeeCircles
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>()
+                    Configuration.GetConnectionString("DefaultConnection")
+                    .Replace("%ProjectFolderPath%", Environment.CurrentDirectory)));
+
+            services.AddDefaultIdentity<ApplicationUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
@@ -69,6 +73,8 @@ namespace CoffeeCircles
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
         }
     }
 }

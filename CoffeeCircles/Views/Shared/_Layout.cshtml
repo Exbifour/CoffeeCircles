@@ -17,7 +17,7 @@
     </environment>
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+    <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -30,9 +30,12 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Products">Products</a></li>
+                    <li class="disabled">
+                        <a asp-area="" asp-controller="Home" asp-action="">
+                            <span class="glyphicon glyphicon-lock"></span> Shops
+                        </a>
+                    </li>
                 </ul>
                 <partial name="_LoginPartial" />
             </div>

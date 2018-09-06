@@ -1,25 +1,39 @@
 @using Microsoft.AspNetCore.Identity
 
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
 @if (SignInManager.IsSignedIn(User))
 {
     <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" id="logoutForm" class="navbar-right">
         <ul class="nav navbar-nav navbar-right">
             <li>
-                <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+                <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserAsync(User).Result.Nickname!</a>
             </li>
             <li>
                 <button type="submit" class="btn btn-link navbar-btn navbar-link">Logout</button>
             </li>
+            @*<li role="presentation" class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                    @UserManager.GetUserName(User)<span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">My account</a>
+                    </li>
+                    <li role="separator" class="divider"></li>
+                    <li>
+                        <a asp-area="Identity" asp-page="/Account/Logout" type="submit" button class="btn btn-default btn-sm">Logout</a>
+                    </li>
+                </ul>
+            </li>*@
         </ul>
     </form>
 }
 else
 {
     <ul class="nav navbar-nav navbar-right">
-        <li><a asp-area="Identity" asp-page="/Account/Register">Register</a></li>
+        <li class="disabled"><a asp-area="Identity" asp-page="/Account/Register"><span class="glyphicon glyphicon-lock"></span> Register</a></li>
         <li><a asp-area="Identity" asp-page="/Account/Login">Login</a></li>
     </ul>
 }
