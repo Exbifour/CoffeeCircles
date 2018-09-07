@@ -13,7 +13,7 @@
 
         @if (SignInManager.IsSignedIn(User))
         {
-            <a asp-controller="Home" asp-action="EditProduct" class="btn btn-default">
+            <a asp-controller="Admin" asp-action="AddProduct" class="btn btn-default">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add new product
             </a>
         }
