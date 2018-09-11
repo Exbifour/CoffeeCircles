@@ -25,9 +25,53 @@ namespace CoffeeCircles.Controllers
             _env = env;
         }
 
-        public IActionResult AddProduct()
+        public IActionResult CreateProduct()
         {
-            return RedirectToAction("EditProduct", new Product());
+            ViewBag.Producttypes = CollectProductTypes();
+            return View("EditProduct");
+        }
+
+        public IActionResult EditProduct(int id)
+        {
+            Product product = _db.Products.FirstOrDefault(p => p.ProductId == id);
+            ViewBag.ProductTypes = CollectProductTypes();
+            return View(product);
+        }
+
+        [HttpPost]
+        public IActionResult CreateEditProduct(IFormFile photo, Product product)
+        {
+            if (ModelState.IsValid)
+            {
+                if(product.ProductId <= 0)
+                {
+                    _db.Products.Add(product);
+                    _db.SaveChanges();
+                    product.PhotoRef = "/Images/no-image.png";
+                }
+                else
+                {
+                    _db.Products.Update(product);
+                }
+
+                if (photo != null)
+                {
+                    string photoPath = product.PhotoRef = "/Images/Products/"
+                        + product.ProductId
+                        + photo.FileName.Substring(photo.FileName.LastIndexOf('.'));
+                    using (FileStream fs = new FileStream(_env.WebRootPath + photoPath, FileMode.Create))
+                    {
+                        photo.CopyTo(fs);
+                    };
+                }
+
+                _db.SaveChanges();
+
+                return RedirectToAction("Products", "Home");
+            }
+
+            ViewBag.ProductTypes = CollectProductTypes();
+            return View("EditProduct");
         }
 
         private List<SelectListItem> CollectProductTypes()
@@ -41,44 +85,12 @@ namespace CoffeeCircles.Controllers
                    .ToList();
         }
 
-        [HttpGet]
-        public IActionResult EditProduct(Product product)
+        public IActionResult RemoveProduct(int id)
         {
-            ViewBag.ProductTypes = CollectProductTypes();
-            return View(product);
+            _db.Remove(_db.Products.FirstOrDefault(p => p.ProductId == id));
+            _db.SaveChanges();
+            return RedirectToAction("Products", "Home");
         }
-
-        [HttpPost]
-        public async Task<IActionResult> AddNewProductAsync(IFormFile photo, Product product)
-        {
-            if (ModelState.IsValid)
-            {
-                _db.Products.Add(product);
-                await _db.SaveChangesAsync();
-
-                if (photo == null)
-                {
-                    product.PhotoRef = "/Images/no-image.png";
-                }
-                else
-                {
-                    string path = "/Images/Products/"
-                        + product.ProductId
-                        + photo.FileName.Substring(photo.FileName.LastIndexOf('.'));
-                    using (FileStream fs = new FileStream(_env.WebRootPath + path, FileMode.Create))
-                    {
-                        await photo.CopyToAsync(fs);
-                    }
-                    product.PhotoRef = path;
-                }
-
-                await _db.SaveChangesAsync();
-
-                return RedirectToAction("Products", "Home");
-            }
-
-            ViewBag.ProductTypes = CollectProductTypes();
-            return RedirectToAction("EditProduct", product);
-        }
+        
     }
 }

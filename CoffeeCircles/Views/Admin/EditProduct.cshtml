@@ -1,16 +1,18 @@
 ﻿@model CoffeeCircles.Models.Product
 
 @{
-    ViewData["Title"] = "Edit Product";
+    ViewData["Title"] = "Edit Product ";
 }
 
 
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
-        <h2>Add new product</h2>
+        <h2>Editing product details</h2>
         <hr />
-        <form asp-action="AddNewProductAsync" enctype="multipart/form-data">
+        <form asp-action="CreateEditProduct" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ProductId" />
+            <input type="hidden" asp-for="PhotoRef" />
             <div class="form-group">
                 <label asp-for="PhotoRef" class="control-label">Photo</label>
                 <span class="label label-info">4:3 is preferred</span>
@@ -24,7 +26,7 @@
             <div class="form-group">
                 <label asp-for="Price" class="control-label"></label>
                 <div class="input-group col-md-3">
-                    <input asp-for="Price" class="form-control" type="number" step="0.01" min="0" autocomplete="off"  />
+                    <input asp-for="Price" class="form-control" type="number" step="0.01" min="0" autocomplete="off" />
                     <div class="input-group-addon">UAH</div>
                 </div>
                 <span asp-validation-for="Price" class="text-danger"></span>
