@@ -1,10 +1,11 @@
 ﻿@using Microsoft.AspNetCore.Identity
 
 @inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
 @{
     ViewData["Title"] = "Products";
-    bool userSigned = SignInManager.IsSignedIn(User);
+    bool userAdmin = SignInManager.IsSignedIn(User) && User.IsInRole("admin");
 }
 
 <div class="row">
@@ -12,7 +13,7 @@
 
         <h2>Products</h2>
 
-        @if (userSigned)
+        @if (userAdmin)
         {
             <a asp-controller="Admin" asp-action="CreateProduct" class="btn btn-default">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add new product
@@ -33,7 +34,7 @@
                             </div>
                         </div>
                         <div class="media-body">
-                            @if (userSigned)
+                            @if (userAdmin)
                             {
                                 <div class="btn-group pull-right">
                                     <a asp-controller="Admin" asp-action="EditProduct" asp-route-id="@p.ProductId" class="btn btn-default">

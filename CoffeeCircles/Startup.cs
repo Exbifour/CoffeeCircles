@@ -52,7 +52,7 @@ namespace CoffeeCircles
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, RoleManager<IdentityRole> roleManager)
         {
             if (env.IsDevelopment())
             {
@@ -79,6 +79,13 @@ namespace CoffeeCircles
             });
 
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
+
+            try
+            {
+                if (!roleManager.RoleExistsAsync("admin").Result)
+                    roleManager.CreateAsync(new IdentityRole("admin")).Wait();
+            }
+            catch { }
         }
     }
 }
