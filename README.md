@@ -38,5 +38,5 @@
 
 ### Тестовые данные:
 #### Administrator:
-- login: "NotADm1niSTRAT0r"
-- password: "Make1Del!ciousCoff33"
+- login: "admin"
+- password: "Admin!2345"
