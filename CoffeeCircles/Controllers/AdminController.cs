@@ -28,7 +28,7 @@ namespace CoffeeCircles.Controllers
         public IActionResult CreateProduct()
         {
             ViewBag.Producttypes = CollectProductTypes();
-            return View("EditProduct");
+            return View("EditProduct", new Product());
         }
 
         public IActionResult EditProduct(int id)
@@ -43,7 +43,7 @@ namespace CoffeeCircles.Controllers
         {
             if (ModelState.IsValid)
             {
-                if(product.ProductId <= 0)
+                if (product.ProductId <= 0)
                 {
                     _db.Products.Add(product);
                     _db.SaveChanges();
@@ -87,10 +87,15 @@ namespace CoffeeCircles.Controllers
 
         public IActionResult RemoveProduct(int id)
         {
-            _db.Remove(_db.Products.FirstOrDefault(p => p.ProductId == id));
+            var prod = _db.Products.FirstOrDefault(p => p.ProductId == id);
+            if (System.IO.File.Exists("wwwroot" + prod.PhotoRef))
+            {
+                System.IO.File.Delete("wwwroot" + prod.PhotoRef);
+            }
+            _db.Remove(prod);
             _db.SaveChanges();
             return RedirectToAction("Products", "Home");
         }
-        
+
     }
 }
