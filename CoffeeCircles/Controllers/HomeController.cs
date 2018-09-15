@@ -32,7 +32,12 @@ namespace CoffeeCircles.Controllers
             return View();
         }
 
-
+        public IActionResult Shops()
+        {
+            ViewBag.Shops = _db.Shops;
+            return View();
+        }
+        
         public IActionResult Privacy()
         {
             return View();

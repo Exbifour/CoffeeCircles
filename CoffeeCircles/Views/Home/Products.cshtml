@@ -1,11 +1,10 @@
 ﻿@using Microsoft.AspNetCore.Identity
 
 @inject SignInManager<ApplicationUser> SignInManager
-@inject UserManager<ApplicationUser> UserManager
 
 @{
     ViewData["Title"] = "Products";
-    bool userAdmin = SignInManager.IsSignedIn(User) && User.IsInRole("admin");
+    bool userIsAdmin = SignInManager.IsSignedIn(User) && User.IsInRole("admin");
 }
 
 <div class="row">
@@ -13,7 +12,7 @@
 
         <h2>Products</h2>
 
-        @if (userAdmin)
+        @if (userIsAdmin)
         {
             <a asp-controller="Admin" asp-action="CreateProduct" class="btn btn-default">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add new product
@@ -27,14 +26,12 @@
                 <div class="panel-body">
                     <div class="media">
                         <div class="media-left media-middle">
-                            <div style="width:128px">
-                                <a href="">
-                                    <img class="media-object" style="height:128px; margin-left:auto; margin-right:auto" src="@Url.Content(p.PhotoRef)" alt="@p.Name">
-                                </a>
-                            </div>
+                            <a href="">
+                                <img class="media-object" style="width:192px; height:144px; object-fit:contain; margin-left:auto; margin-right:auto" src="@Url.Content(p.PhotoRef)" alt="@p.Name">
+                            </a>
                         </div>
                         <div class="media-body">
-                            @if (userAdmin)
+                            @if (userIsAdmin)
                             {
                                 <div class="btn-group pull-right">
                                     <a asp-controller="Admin" asp-action="EditProduct" asp-route-id="@p.ProductId" class="btn btn-default">

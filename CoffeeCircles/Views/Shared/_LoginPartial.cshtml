@@ -5,28 +5,34 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
+    string userNickname = UserManager.GetUserAsync(User).Result.Nickname;
+    if (userNickname == null || userNickname == string.Empty)
+    {
+            userNickname = UserManager.GetUserName(User);
+    }
+    
     <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" id="logoutForm" class="navbar-right">
         <ul class="nav navbar-nav navbar-right">
             <li>
-                <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserAsync(User).Result.Nickname!</a>
+                <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @userNickname!</a>
             </li>
             <li>
                 <button type="submit" class="btn btn-link navbar-btn navbar-link">Logout</button>
             </li>
             @*<li role="presentation" class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                    @UserManager.GetUserName(User)<span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu">
-                    <li>
-                        <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">My account</a>
-                    </li>
-                    <li role="separator" class="divider"></li>
-                    <li>
-                        <a asp-area="Identity" asp-page="/Account/Logout" type="submit" button class="btn btn-default btn-sm">Logout</a>
-                    </li>
-                </ul>
-            </li>*@
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                        @UserManager.GetUserName(User)<span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">My account</a>
+                        </li>
+                        <li role="separator" class="divider"></li>
+                        <li>
+                            <a asp-area="Identity" asp-page="/Account/Logout" type="submit" button class="btn btn-default btn-sm">Logout</a>
+                        </li>
+                    </ul>
+                </li>*@
         </ul>
     </form>
 }

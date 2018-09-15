@@ -97,5 +97,9 @@ namespace CoffeeCircles.Controllers
             return RedirectToAction("Products", "Home");
         }
 
+        public IActionResult CreateShop()
+        {
+            return View("EditStore");
+        }
     }
 }
