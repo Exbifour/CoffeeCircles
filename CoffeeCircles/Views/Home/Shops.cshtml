@@ -14,7 +14,7 @@
 
         @if (userIsAdmin)
         {
-            <a asp-controller="Admin" asp-action="CreateShop" class="btn btn-default disabled">
+            <a asp-controller="Admin" asp-action="CreateShop" class="btn btn-default">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add store
             </a>
         }
@@ -30,32 +30,55 @@
                                 <img class="media-object" style="width:128px; height:96px; object-fit:contain; margin-left:auto; margin-right:auto" src="@Url.Content(s.PhotoRef)" alt="Shop photo">
                             </a>
                         </div>
-                        <div class="media-body">
+                        <div class="media-body media-middle">
                             @if (userIsAdmin)
                             {
                                 <div class="btn-group pull-right">
-                                    <a asp-controller="Admin" asp-action="" asp-route-id="@s.ShopId" class="btn btn-default disabled">
+                                    <a asp-controller="Admin" asp-action="EditShop" asp-route-id="@s.ShopId" class="btn btn-default">
                                         <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                                     </a>
-                                    <a asp-controller="Admin" asp-action="" asp-route-id="@s.ShopId" class="btn btn-danger disabled">
+                                    <a asp-controller="Admin" asp-action="RemoveShop" asp-route-id="@s.ShopId" class="btn btn-danger">
                                         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                                     </a>
                                 </div>
                             }
-                            <h3>
-                                @string.Format($"{s.Street}, {s.Address}")
-                            </h3>
                             <h4>
-                                <span class="label label-info" style="margin-right:5px">
-                                    @string.Format("{0}:{1:00} - {2}:{3:00}",
-                                                              s.WorkingFrom.Hours, s.WorkingFrom.Minutes,
-                                                              s.WorkingTo.Hours, s.WorkingTo.Minutes)
-                                </span>
-                                <br />
-                                @if(DateTime.Now.Hour > s.WorkingTo.Hours)
-                                {
-                                    <span class="label label-warning">Closed for today</span>
+                                @{
+                                    int hourNow = DateTime.Now.Hour;
+                                    int closesIn = s.WorkingTo.Hours - hourNow;
+                                    int opensIn = s.WorkingFrom.Hours - hourNow;
+                                    if (closesIn < 2)
+                                    {
+                                        if(closesIn < 1)
+                                        {
+                                            <span class="label label-danger">Closed for today</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="label label-warning">Closing soon</span>
+                                        }
+                                    }
+                                    else if(opensIn > 0)
+                                    {
+                                        if (opensIn > 1)
+                                        {
+                                            <span class="label label-info">Opens in @opensIn hours</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="label label-success">Opens in less than an hour</span>
+                                        }
+                                    }
                                 }
+                            </h4>
+                            <h4 class="media-heading">
+                                <span class="glyphicon glyphicon-map-marker"></span> @string.Format($"{s.Street}, {s.Address}")
+                            </h4>
+                            <h4>
+                                <span class="glyphicon glyphicon-time"></span>
+                                @string.Format("{0}:{1:00} - {2}:{3:00}",
+                                    s.WorkingFrom.Hours, s.WorkingFrom.Minutes,
+                                    s.WorkingTo.Hours, s.WorkingTo.Minutes)
                             </h4>
                         </div>
                     </div>

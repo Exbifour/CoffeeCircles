@@ -34,6 +34,7 @@
 
   <ItemGroup>
     <Folder Include="Areas\Identity\Services\" />
+    <Folder Include="wwwroot\images\Shops\" />
     <Folder Include="wwwroot\images\Products\" />
   </ItemGroup>
 

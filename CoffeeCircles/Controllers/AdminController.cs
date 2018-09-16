@@ -88,18 +88,71 @@ namespace CoffeeCircles.Controllers
         public IActionResult RemoveProduct(int id)
         {
             var prod = _db.Products.FirstOrDefault(p => p.ProductId == id);
-            if (System.IO.File.Exists("wwwroot" + prod.PhotoRef))
+            if (prod.PhotoRef != "/Images/no-image.png" && System.IO.File.Exists(_env.ContentRootPath + prod.PhotoRef))
             {
                 System.IO.File.Delete("wwwroot" + prod.PhotoRef);
             }
-            _db.Remove(prod);
+            _db.Products.Remove(prod);
             _db.SaveChanges();
             return RedirectToAction("Products", "Home");
         }
 
         public IActionResult CreateShop()
         {
-            return View("EditStore");
+            return View("EditShop", new Shop());
+        }
+
+        public IActionResult EditShop(int id)
+        {
+            Shop shop = _db.Shops.FirstOrDefault(s => s.ShopId == id);
+            return View(shop);
+        }
+
+        [HttpPost]
+        public IActionResult CreateEditShop(IFormFile photo, Shop shop)
+        {
+            if (ModelState.IsValid)
+            {
+                if (shop.ShopId <= 0)
+                {
+                    _db.Shops.Add(shop);
+                    _db.SaveChanges();
+                    shop.PhotoRef = "/Images/no-image.png";
+                }
+                else
+                {
+                    _db.Shops.Update(shop);
+                }
+
+                if (photo != null)
+                {
+                    string photoPath = shop.PhotoRef = "/Images/Shops/"
+                        + shop.ShopId
+                        + photo.FileName.Substring(photo.FileName.LastIndexOf('.'));
+                    using (FileStream fs = new FileStream(_env.WebRootPath + photoPath, FileMode.Create))
+                    {
+                        photo.CopyTo(fs);
+                    };
+                }
+
+                _db.SaveChanges();
+
+                return RedirectToAction("Shops", "Home");
+            }
+
+            return View("EditShop");
+        }
+
+        public IActionResult RemoveShop(int id)
+        {
+            var shop = _db.Shops.FirstOrDefault(s => s.ShopId == id);
+            if (shop.PhotoRef != "/Images/no-image.png" && System.IO.File.Exists(_env.ContentRootPath + shop.PhotoRef))
+            {
+                System.IO.File.Delete("wwwroot" + shop.PhotoRef);
+            }
+            _db.Shops.Remove(shop);
+            _db.SaveChanges();
+            return RedirectToAction("Shops", "Home");
         }
     }
 }
