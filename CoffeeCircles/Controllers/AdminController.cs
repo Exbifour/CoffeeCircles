@@ -88,9 +88,9 @@ namespace CoffeeCircles.Controllers
         public IActionResult RemoveProduct(int id)
         {
             var prod = _db.Products.FirstOrDefault(p => p.ProductId == id);
-            if (prod.PhotoRef != "/Images/no-image.png" && System.IO.File.Exists(_env.ContentRootPath + prod.PhotoRef))
+            if (prod.PhotoRef != "/Images/no-image.png" && System.IO.File.Exists(_env.WebRootPath + prod.PhotoRef))
             {
-                System.IO.File.Delete("wwwroot" + prod.PhotoRef);
+                System.IO.File.Delete(_env.WebRootPath + prod.PhotoRef);
             }
             _db.Products.Remove(prod);
             _db.SaveChanges();
@@ -146,9 +146,9 @@ namespace CoffeeCircles.Controllers
         public IActionResult RemoveShop(int id)
         {
             var shop = _db.Shops.FirstOrDefault(s => s.ShopId == id);
-            if (shop.PhotoRef != "/Images/no-image.png" && System.IO.File.Exists(_env.ContentRootPath + shop.PhotoRef))
+            if (shop.PhotoRef != "/Images/no-image.png" && System.IO.File.Exists(_env.WebRootPath + shop.PhotoRef))
             {
-                System.IO.File.Delete("wwwroot" + shop.PhotoRef);
+                System.IO.File.Delete(_env.WebRootPath + shop.PhotoRef);
             }
             _db.Shops.Remove(shop);
             _db.SaveChanges();

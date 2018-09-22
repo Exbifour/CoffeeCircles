@@ -8,9 +8,20 @@
     ViewData["Title"] = "ShopDetails";
     bool userIsAdmin = SignInManager.IsSignedIn(User) && User.IsInRole("admin");
 }
+
 <br />
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
+        @if (userIsAdmin)
+        {
+            <a asp-controller="Admin" asp-action="EditShop" asp-route-id="@Model.Shop.ShopId" class="btn btn-default">
+                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit
+            </a>
+            <a asp-controller="Admin" asp-action="RemoveShop" asp-route-id="@Model.Shop.ShopId" class="btn btn-danger">
+                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Remove
+            </a>
+            <hr />
+        }
         @{
             int hourNow = DateTime.Now.Hour;
             int closesIn = Model.Shop.WorkingTo.Hours - hourNow;
@@ -55,7 +66,7 @@
             }
         }
         <div class="thumbnail col-md-5">
-            <img class="media-object" style="width:384px; height:288px; object-fit:contain;" src="@Url.Content(Model.Shop.PhotoRef)" alt="Shop photo">
+            <img style="width:384px; height:288px; object-fit:contain;" src="@Url.Content(Model.Shop.PhotoRef)" alt="Shop photo">
         </div>
         <div class="panel panel-default col-md-6 col-md-offset-1">
             <div class="panel-body">
