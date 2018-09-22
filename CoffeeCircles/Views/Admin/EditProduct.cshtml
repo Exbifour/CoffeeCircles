@@ -8,10 +8,8 @@
     <div class="col-md-8 col-md-offset-2">
         <h2>Editing product details</h2>
         <hr />
-        <form asp-action="CreateEditProduct" enctype="multipart/form-data">
+        <form asp-action="CreateEditProduct" asp-route-productId="@Model.ProductId" asp-route-photoRef="@Model.PhotoRef" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="ProductId" />
-            <input type="hidden" asp-for="PhotoRef" />
             <div class="form-group">
                 <label asp-for="PhotoRef" class="control-label">Photo</label>
                 <span class="label label-info">4:3 is preferred</span>

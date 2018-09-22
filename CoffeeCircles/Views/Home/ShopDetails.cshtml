@@ -1,0 +1,122 @@
+﻿@model CoffeeCircles.Models.ViewModels.ShopDetailsViewModel
+
+@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+    ViewData["Title"] = "ShopDetails";
+    bool userIsAdmin = SignInManager.IsSignedIn(User) && User.IsInRole("admin");
+}
+<br />
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        @{
+            int hourNow = DateTime.Now.Hour;
+            int closesIn = Model.Shop.WorkingTo.Hours - hourNow;
+            int opensIn = Model.Shop.WorkingFrom.Hours - hourNow;
+            if (closesIn < 2)
+            {
+                if (closesIn < 1)
+                {
+                    <div class="panel panel-danger">
+                        <div class="panel-heading">
+                            Closed for today
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="panel panel-warning">
+                        <div class="panel-heading">
+                            Closing soon
+                        </div>
+                    </div>
+                }
+            }
+            else if (opensIn > 0)
+            {
+                if (opensIn > 1)
+                {
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            Opens in @opensIn hours
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            Opens in less than an hour
+                        </div>
+                    </div>
+                }
+            }
+        }
+        <div class="thumbnail col-md-5">
+            <img class="media-object" style="width:384px; height:288px; object-fit:contain;" src="@Url.Content(Model.Shop.PhotoRef)" alt="Shop photo">
+        </div>
+        <div class="panel panel-default col-md-6 col-md-offset-1">
+            <div class="panel-body">
+                <h3>
+                    <span class="glyphicon glyphicon-map-marker"></span> @string.Format($"{Model.Shop.Street}, {Model.Shop.Address}")
+                </h3>
+                <h3>
+                    <span class="glyphicon glyphicon-time"></span>
+                    @string.Format("{0}:{1:00} - {2}:{3:00}",
+                        Model.Shop.WorkingFrom.Hours, Model.Shop.WorkingFrom.Minutes,
+                        Model.Shop.WorkingTo.Hours, Model.Shop.WorkingTo.Minutes)
+                </h3>
+            </div>
+        </div>
+
+        <div class="panel panel-default col-md-8 col-md-offset-2">
+            <div class="panel-heading">Avaliable products</div>
+            <table class="table">
+                <tr>
+                    <th>Name</th>
+                    <th>Price</th>
+                </tr>
+                @foreach (Product p in Model.AvaliableProducts)
+                {
+                    <tr>
+                        <td>@p.Name</td>
+                        <td>@Decimal.Round(p.Price, 2) UAH</td>
+                    </tr>
+                }
+            </table>
+        </div>
+        @if (userIsAdmin)
+        {
+            <div class="panel panel-default col-md-8 col-md-offset-2">
+                <div class="panel-heading">Unavaliable products</div>
+                <table class="table">
+                    @if (Model.UnavailableProducts.Count == 0)
+                    {
+                        <tr>
+                            <td>
+                                <i>Nothing is here</i>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <th>Name</th>
+                            <th>Price</th>
+                        </tr>
+                        @foreach (Product p in Model.UnavailableProducts)
+                        {
+                            <tr>
+                                <td>@p.Name</td>
+                                <td>@Decimal.Round(p.Price, 2) UAH</td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </div>
+        }
+    </div>
+</div>
+

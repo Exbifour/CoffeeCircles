@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using CoffeeCircles.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using CoffeeCircles.Models.ViewModels;
 
 namespace CoffeeCircles.Controllers
 {
@@ -38,6 +39,19 @@ namespace CoffeeCircles.Controllers
             return View();
         }
         
+        public IActionResult ShopDetails(int id)
+        {
+            ShopDetailsViewModel shopDetails = new ShopDetailsViewModel();
+            shopDetails.Shop = _db.Shops.Include(s => s.UnavaliableList).FirstOrDefault(s => s.ShopId == id);
+            shopDetails.UnavailableProducts = _db.ShopUnavailableLists.Where(sul => sul.ShopId == id)
+                .Include(sul => sul.Product)
+                .Select(sul => sul.Product)
+                .ToList();
+            shopDetails.AvaliableProducts = _db.Products.Except(shopDetails.UnavailableProducts).ToList();
+
+            return View(shopDetails);
+        }
+
         public IActionResult Privacy()
         {
             return View();

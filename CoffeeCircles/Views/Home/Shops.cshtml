@@ -26,7 +26,7 @@
                 <div class="panel-body">
                     <div class="media">
                         <div class="media-left media-middle">
-                            <a href="">
+                            <a asp-action="ShopDetails" asp-route-id="@s.ShopId">
                                 <img class="media-object" style="width:128px; height:96px; object-fit:contain; margin-left:auto; margin-right:auto" src="@Url.Content(s.PhotoRef)" alt="Shop photo">
                             </a>
                         </div>
@@ -72,7 +72,8 @@
                                 }
                             </h4>
                             <h4 class="media-heading">
-                                <span class="glyphicon glyphicon-map-marker"></span> @string.Format($"{s.Street}, {s.Address}")
+                                <span class="glyphicon glyphicon-map-marker"></span> 
+                                <a asp-action="ShopDetails" asp-route-id="@s.ShopId">@string.Format($"{s.Street}, {s.Address}")</a>
                             </h4>
                             <h4>
                                 <span class="glyphicon glyphicon-time"></span>
