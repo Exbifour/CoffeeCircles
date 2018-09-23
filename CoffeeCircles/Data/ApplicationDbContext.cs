@@ -13,6 +13,7 @@ namespace CoffeeCircles.Data
         public DbSet<ProductType> ProductTypes { get; set; }
         public DbSet<Shop> Shops { get; set; }
         public DbSet<ShopUnavailableList> ShopUnavailableLists { get; set; }
+        public DbSet<Moderator> Moderators { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -25,7 +26,7 @@ namespace CoffeeCircles.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<ShopUnavailableList>()
-                .HasKey(l => new { l.ProductId, l.ShopId });
+                .HasKey(list => new { list.ProductId, list.ShopId });
         }
     }
 }

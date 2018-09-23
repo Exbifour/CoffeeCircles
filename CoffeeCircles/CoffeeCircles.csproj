@@ -25,11 +25,13 @@
     <Compile Remove="Data\Migrations\20180904180053_AddAppModels.Designer.cs" />
     <Compile Remove="Data\Migrations\20180904181516_AddAppModels.cs" />
     <Compile Remove="Data\Migrations\20180904181516_AddAppModels.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180923203332_Moderators.cs" />
+    <Compile Remove="Data\Migrations\20180923203332_Moderators.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.4" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>

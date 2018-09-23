@@ -42,10 +42,10 @@ namespace CoffeeCircles.Controllers
         public IActionResult ShopDetails(int id)
         {
             ShopDetailsViewModel shopDetails = new ShopDetailsViewModel();
-            shopDetails.Shop = _db.Shops.Include(s => s.UnavaliableList).FirstOrDefault(s => s.ShopId == id);
-            shopDetails.UnavailableProducts = _db.ShopUnavailableLists.Where(sul => sul.ShopId == id)
-                .Include(sul => sul.Product)
-                .Select(sul => sul.Product)
+            shopDetails.Shop = _db.Shops.FirstOrDefault(s => s.ShopId == id);
+            shopDetails.UnavailableProducts = _db.ShopUnavailableLists.Where(list => list.ShopId == id)
+                .Include(list => list.Product)
+                .Select(list => list.Product)
                 .ToList();
             shopDetails.AvaliableProducts = _db.Products.Except(shopDetails.UnavailableProducts).ToList();
 

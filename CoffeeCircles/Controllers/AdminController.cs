@@ -5,11 +5,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using CoffeeCircles.Data;
 using CoffeeCircles.Models;
+using CoffeeCircles.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeCircles.Controllers
 {
@@ -153,6 +155,57 @@ namespace CoffeeCircles.Controllers
             _db.Shops.Remove(shop);
             _db.SaveChanges();
             return RedirectToAction("Shops", "Home");
+        }
+
+        public IActionResult Moderators(string searchForUser)
+        {
+            ModeratorsViewModel moderators = new ModeratorsViewModel()
+            {
+                Shops = _db.Shops.Include(s => s.Moderators).ThenInclude(m => m.User).ToList(),
+                SearchResult = searchForUser == null ? null : _db.Users.Where(u => u.UserName == searchForUser).ToList()
+            };
+            
+            return View(moderators);
+        }
+
+        public IActionResult EditModerator(string userId)
+        {
+            Moderator mod = _db.Moderators.FirstOrDefault(m => m.UserId == userId);
+            if (mod == null)
+            {
+                mod = new Moderator() { UserId = userId };
+            }
+            ViewBag.Shops = _db.Shops;
+            return View(mod);
+        }
+
+        [HttpPost]
+        public IActionResult CreateEditModerator(Moderator mod)
+        {
+            if(ModelState.IsValid)
+            {
+                if (_db.Moderators.Contains(mod))
+                {
+                    _db.Moderators.Update(mod);
+                }
+                else
+                {
+                    _db.Moderators.Add(mod);
+                }
+                _db.SaveChanges();
+
+                return RedirectToAction("Moderators");
+            }
+            return View("EditModerator");
+        }
+
+        public IActionResult RemoveModerator(string userId)
+        {
+            Moderator mod = _db.Moderators.FirstOrDefault(m => m.UserId == userId);
+            _db.Moderators.Remove(mod);
+            _db.SaveChanges();
+
+            return RedirectToAction("Moderators");
         }
     }
 }

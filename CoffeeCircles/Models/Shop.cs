@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CoffeeCircles.Models
 {
@@ -29,5 +27,6 @@ namespace CoffeeCircles.Models
 
         // Navigation properties.
         public virtual ICollection<ShopUnavailableList> UnavaliableList { get; private set; }
+        public virtual ICollection<Moderator> Moderators { get; set; }
     }
 }

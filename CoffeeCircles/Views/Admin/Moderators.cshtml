@@ -1,0 +1,111 @@
+﻿@model CoffeeCircles.Models.ViewModels.ModeratorsViewModel
+
+@{
+    ViewData["Title"] = "Moderators";
+}
+
+<br />
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Search for moderators</h3>
+            </div>
+            <div class="panel-body">
+                <form method="get" asp-action="Moderators">
+                    <div class="input-group">
+                        <input type="text" name="searchForUser" class="form-control" autocomplete="off" placeholder="Search by UserName">
+                        <span class="input-group-btn form-group">
+                            <button type="submit" class="btn btn-default">
+                                <span class="glyphicon glyphicon-search"></span> Search
+                            </button>
+                        </span>
+                    </div>
+                </form>
+            </div>
+            @if (Model.SearchResult != null)
+            {
+                <table class="table">
+                    <tr>
+                        <th>Username</th>
+                        <th>Name</th>
+                        <th>PhoneNumber</th>
+                        <th>Actions</th>
+                    </tr>
+                    @if (!Model.SearchResult.Any())
+                    {
+                        <tr>
+                            <td>
+                                <i>No matches found!</i>
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (ApplicationUser user in Model.SearchResult)
+                        {
+                            <tr>
+                                <td>@user.UserName</td>
+                                <td>@user.Nickname</td>
+                                <td>@user.PhoneNumber</td>
+                                <td>
+                                    <a asp-action="EditModerator" asp-route-userId="@user.Id" class="btn btn-default btn-sm">
+                                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Select
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </table>
+            }
+        </div>
+        <hr />
+        @foreach (Shop shop in Model.Shops)
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">@string.Format($"{shop.City}, {shop.Street}, {shop.Address}")</h3>
+                </div>
+                @if (shop.Moderators.Count == 0)
+                {
+                    <div class="panel-body">
+                        <i>No moderators here!</i>
+                    </div>
+                }
+                else
+                {
+                    <table class="table">
+                        <tr>
+                            <th>Username</th>
+                            <th>Name</th>
+                            <th>PhoneNumber</th>
+                            <th>Actions</th>
+                        </tr>
+                        @foreach (Moderator mod in shop.Moderators)
+                        {
+                            <tr>
+                                <td>@mod.User.UserName</td>
+                                <td>@mod.User.Nickname</td>
+                                <td>@mod.User.PhoneNumber</td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a asp-action="EditModerator" asp-route-userId="@mod.UserId" class="btn btn-default" title="Edit moderator">
+                                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                        </a>
+                                        <a asp-action="RemoveModerator" asp-route-userId="@mod.UserId" class="btn btn-danger" title="Remove moderator">
+                                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                }
+            </div>
+        }
+
+    </div>
+</div>

@@ -15,7 +15,7 @@ namespace CoffeeCircles.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.1-rtm-30846")
+                .HasAnnotation("ProductVersion", "2.1.3-rtm-32065")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -71,6 +71,19 @@ namespace CoffeeCircles.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("CoffeeCircles.Models.Moderator", b =>
+                {
+                    b.Property<string>("UserId");
+
+                    b.Property<int>("ShopId");
+
+                    b.HasKey("UserId");
+
+                    b.HasIndex("ShopId");
+
+                    b.ToTable("Moderators");
                 });
 
             modelBuilder.Entity("CoffeeCircles.Models.Product", b =>
@@ -229,11 +242,9 @@ namespace CoffeeCircles.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.Property<string>("LoginProvider")
-                        .HasMaxLength(128);
+                    b.Property<string>("LoginProvider");
 
-                    b.Property<string>("ProviderKey")
-                        .HasMaxLength(128);
+                    b.Property<string>("ProviderKey");
 
                     b.Property<string>("ProviderDisplayName");
 
@@ -264,17 +275,28 @@ namespace CoffeeCircles.Data.Migrations
                 {
                     b.Property<string>("UserId");
 
-                    b.Property<string>("LoginProvider")
-                        .HasMaxLength(128);
+                    b.Property<string>("LoginProvider");
 
-                    b.Property<string>("Name")
-                        .HasMaxLength(128);
+                    b.Property<string>("Name");
 
                     b.Property<string>("Value");
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("CoffeeCircles.Models.Moderator", b =>
+                {
+                    b.HasOne("CoffeeCircles.Models.Shop", "Shop")
+                        .WithMany("Moderators")
+                        .HasForeignKey("ShopId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("CoffeeCircles.Models.ApplicationUser", "User")
+                        .WithOne("Moderator")
+                        .HasForeignKey("CoffeeCircles.Models.Moderator", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("CoffeeCircles.Models.Product", b =>

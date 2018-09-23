@@ -17,6 +17,9 @@
             <a asp-controller="Admin" asp-action="CreateShop" class="btn btn-default">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add store
             </a>
+            <a asp-controller="Admin" asp-action="Moderators" class="btn btn-default">
+                <span class="glyphicon glyphicon-tower" aria-hidden="true"></span> Moderators
+            </a>
         }
         <hr />
 
@@ -49,7 +52,7 @@
                                     int opensIn = s.WorkingFrom.Hours - hourNow;
                                     if (closesIn < 2)
                                     {
-                                        if(closesIn < 1)
+                                        if (closesIn < 1)
                                         {
                                             <span class="label label-danger">Closed for today</span>
                                         }
@@ -58,7 +61,7 @@
                                             <span class="label label-warning">Closing soon</span>
                                         }
                                     }
-                                    else if(opensIn > 0)
+                                    else if (opensIn > 0)
                                     {
                                         if (opensIn > 1)
                                         {
@@ -72,7 +75,7 @@
                                 }
                             </h4>
                             <h4 class="media-heading">
-                                <span class="glyphicon glyphicon-map-marker"></span> 
+                                <span class="glyphicon glyphicon-map-marker"></span>
                                 <a asp-action="ShopDetails" asp-route-id="@s.ShopId">@string.Format($"{s.Street}, {s.Address}")</a>
                             </h4>
                             <h4>
