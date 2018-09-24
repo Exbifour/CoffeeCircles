@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using CoffeeCircles.Data;
 using CoffeeCircles.Models;
@@ -9,6 +10,7 @@ using CoffeeCircles.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -19,11 +21,17 @@ namespace CoffeeCircles.Controllers
     public class AdminController : Controller
     {
         readonly ApplicationDbContext _db;
+        private UserManager<ApplicationUser> _userManager;
         private readonly IHostingEnvironment _env;
+        
 
-        public AdminController(ApplicationDbContext db, IHostingEnvironment env)
+        public AdminController(ApplicationDbContext db, 
+            IHostingEnvironment env, 
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager)
         {
             _db = db;
+            _userManager = userManager;
             _env = env;
         }
 
@@ -180,28 +188,37 @@ namespace CoffeeCircles.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateEditModerator(Moderator mod)
+        public async Task<IActionResult> CreateEditModerator(Moderator mod, int oldShop)
         {
             if(ModelState.IsValid)
             {
                 if (_db.Moderators.Contains(mod))
                 {
                     _db.Moderators.Update(mod);
+                    await _userManager.ReplaceClaimAsync(mod.User, 
+                        new Claim("ModerateShop", oldShop.ToString()),
+                        new Claim("ModerateShop", mod.ShopId.ToString()));
                 }
                 else
                 {
+                    var user = _db.Users.First(u => u.Id == mod.UserId);
                     _db.Moderators.Add(mod);
+                    await _userManager.AddToRoleAsync(user, "moderator");
+                    await _userManager.AddClaimAsync(user, new Claim("ModerateShop", mod.ShopId.ToString()));
                 }
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
 
                 return RedirectToAction("Moderators");
             }
             return View("EditModerator");
         }
 
-        public IActionResult RemoveModerator(string userId)
+        public async Task<IActionResult> RemoveModerator(string userId)
         {
-            Moderator mod = _db.Moderators.FirstOrDefault(m => m.UserId == userId);
+            Moderator mod = _db.Moderators
+                .Include(m => m.User)
+                .FirstOrDefault(m => m.UserId == userId);
+            await _userManager.RemoveClaimAsync(mod.User, new Claim("ModerateShop", mod.ShopId.ToString()));
             _db.Moderators.Remove(mod);
             _db.SaveChanges();
 

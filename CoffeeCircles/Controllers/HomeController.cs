@@ -38,15 +38,17 @@ namespace CoffeeCircles.Controllers
             ViewBag.Shops = _db.Shops;
             return View();
         }
-        
+
         public IActionResult ShopDetails(int id)
         {
-            ShopDetailsViewModel shopDetails = new ShopDetailsViewModel();
-            shopDetails.Shop = _db.Shops.FirstOrDefault(s => s.ShopId == id);
-            shopDetails.UnavailableProducts = _db.ShopUnavailableLists.Where(list => list.ShopId == id)
+            ShopDetailsViewModel shopDetails = new ShopDetailsViewModel
+            {
+                Shop = _db.Shops.FirstOrDefault(s => s.ShopId == id),
+                UnavailableProducts = _db.ShopUnavailableLists.Where(list => list.ShopId == id)
                 .Include(list => list.Product)
                 .Select(list => list.Product)
-                .ToList();
+                .ToList()
+            };
             shopDetails.AvaliableProducts = _db.Products.Except(shopDetails.UnavailableProducts).ToList();
 
             return View(shopDetails);

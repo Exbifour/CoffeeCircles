@@ -8,11 +8,8 @@
 <div class="row">
     <div class="col-md-6 col-md-offset-3">
         <h2>EditModerator</h2>
-        <a asp-action="RemoveModerator" asp-route-userId="@Model.UserId" class="btn btn-danger">
-            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Remove
-        </a>
         <hr />
-        <form asp-action="CreateEditModerator" asp-route-userId="@Model.UserId" enctype="multipart/form-data">
+        <form asp-action="CreateEditModerator" asp-route-userId="@Model.UserId" asp-route-oldShop="@Model.ShopId" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="panel panel-default">
                 <div class="panel-heading">

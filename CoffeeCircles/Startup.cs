@@ -49,6 +49,19 @@ namespace CoffeeCircles
                 .AddDefaultUI();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            //services.AddAuthorization(options =>
+            //{
+            //    options.AddPolicy(
+            //       "Moderator",
+            //        policyBuilder => policyBuilder.RequireClaim("ModerateShop")),
+            //});
+            //services.AddAuthorization(options =>
+            //{
+            //    options.AddPolicy(
+            //       "Administrator",
+            //        policyBuilder => policyBuilder.RequireRole("admin"));
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -84,6 +97,12 @@ namespace CoffeeCircles
             {
                 if (!roleManager.RoleExistsAsync("admin").Result)
                     roleManager.CreateAsync(new IdentityRole("admin")).Wait();
+            }
+            catch { }
+            try
+            {
+                if (!roleManager.RoleExistsAsync("moderator").Result)
+                    roleManager.CreateAsync(new IdentityRole("moderator")).Wait();
             }
             catch { }
         }
