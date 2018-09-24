@@ -13,7 +13,7 @@
     if (SignInManager.IsSignedIn(User))
     {
         userIsAdmin = User.IsInRole("admin");
-        bool userModerateThis = userModerateThis = User.HasClaim("ModerateShop", shopId.ToString());
+        bool userModerateThis = User.HasClaim("ModerateShop", shopId.ToString());
         canManageProds = userIsAdmin || userModerateThis;
     }
 }
@@ -93,7 +93,7 @@
 
         <div class="panel panel-default col-md-8 col-md-offset-2">
             <div class="panel-heading">Avaliable products</div>
-            <table class="table">
+            <table class="table table-striped">
                 <tr>
                     <th>Name</th>
                     <th>Price</th>
@@ -123,7 +123,7 @@
         {
             <div class="panel panel-default col-md-8 col-md-offset-2">
                 <div class="panel-heading">Unavaliable products</div>
-                <table class="table">
+                <table class="table table-striped">
                     @if (Model.UnavailableProducts.Count == 0)
                     {
                         <tr>

@@ -194,8 +194,9 @@ namespace CoffeeCircles.Controllers
             {
                 if (_db.Moderators.Contains(mod))
                 {
+                    var user = _db.Users.First(u => u.Id == mod.UserId);
                     _db.Moderators.Update(mod);
-                    await _userManager.ReplaceClaimAsync(mod.User, 
+                    await _userManager.ReplaceClaimAsync(user, 
                         new Claim("ModerateShop", oldShop.ToString()),
                         new Claim("ModerateShop", mod.ShopId.ToString()));
                 }

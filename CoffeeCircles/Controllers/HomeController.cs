@@ -43,7 +43,7 @@ namespace CoffeeCircles.Controllers
         {
             ShopDetailsViewModel shopDetails = new ShopDetailsViewModel
             {
-                Shop = _db.Shops.FirstOrDefault(s => s.ShopId == id),
+                Shop = _db.Shops.First(s => s.ShopId == id),
                 UnavailableProducts = _db.ShopUnavailableLists.Where(list => list.ShopId == id)
                 .Include(list => list.Product)
                 .Select(list => list.Product)
